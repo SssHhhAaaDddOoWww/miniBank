@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/SssHhhAaaDddOoWww/miniBank/db"
+	"github.com/SssHhhAaaDddOoWww/miniBank/api/db"
 	"github.com/gin-gonic/gin"
 
 	"github.com/joho/godotenv"
