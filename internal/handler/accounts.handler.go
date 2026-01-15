@@ -8,6 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func CreateAccount(c *gin.Context) {
+	acc, err := services.CreateAccount()
+	if err != nil {
+		c.JSON(500, gin.H{"error": "failed to create account"})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"account_id": acc.ID,
+		"balance":    acc.Balance,
+	})
+}
+
 func Deposit(c *gin.Context) {
 	var req struct {
 		AccountID uint    `json:"account_id"`
@@ -22,7 +35,7 @@ func Deposit(c *gin.Context) {
 		return
 
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "withdraw successful"})
+	c.JSON(http.StatusOK, gin.H{"status": "deposit successful"})
 
 }
 

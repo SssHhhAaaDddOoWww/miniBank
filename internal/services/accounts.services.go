@@ -3,10 +3,22 @@ package services
 import (
 	"errors"
 
-	"github.com/SssHhhAaaDddOoWww/miniBank/internal/db"
-	"github.com/SssHhhAaaDddOoWww/miniBank/internal/db/model"
+	db "github.com/SssHhhAaaDddOoWww/miniBank/internal/database"
+	"github.com/SssHhhAaaDddOoWww/miniBank/internal/database/model"
 	"gorm.io/gorm"
 )
+
+func CreateAccount() (*model.Account, error) {
+	acc := model.Account{
+		Balance: 0,
+	}
+
+	if err := db.DB.Create(&acc).Error; err != nil {
+		return nil, err
+	}
+
+	return &acc, nil
+}
 
 func Deposit(amount float64, accountID uint) error {
 	if amount <= 0 {

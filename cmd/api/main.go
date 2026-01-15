@@ -5,7 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/SssHhhAaaDddOoWww/miniBank/internal/db"
+	db "github.com/SssHhhAaaDddOoWww/miniBank/internal/database"
+	"github.com/SssHhhAaaDddOoWww/miniBank/internal/database/model"
 	"github.com/SssHhhAaaDddOoWww/miniBank/internal/routes"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,17 @@ func main() {
 		fmt.Println(err)
 	}
 	db.Connect()
+	err = db.DB.AutoMigrate(
+		&model.Account{},
+		&model.Transaction{},
+		&model.Transfer{},
+		&model.LedgerEntry{},
+	)
+	if err != nil {
+		log.Fatal("Migration failed:", err)
+	}
+	log.Println(" Migration completed!")
+
 	router := gin.Default()
 	routes.Routes(router)
 

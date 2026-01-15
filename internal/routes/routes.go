@@ -8,6 +8,7 @@ import (
 
 func Routes(router *gin.Engine) {
 	router.GET("/health", health.Health)
+	router.POST("/accounts", handler.CreateAccount)
 	router.GET("/accounts/:id/balance", handler.GetBalance)
 	router.POST("/deposit", handler.Deposit)
 	router.POST("/withdraw", handler.Withdraw)
