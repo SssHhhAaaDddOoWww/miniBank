@@ -2,8 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
-	"github.com/SssHhhAaaDddOoWww/miniBank/api/services"
+	"github.com/SssHhhAaaDddOoWww/miniBank/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -56,4 +57,43 @@ func Transfer(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 	c.JSON(http.StatusOK, gin.H{"status": "transferred succesfully !"})
+}
+
+func GetBalance(c *gin.Context) {
+	idParam := c.Param("id")
+	accountID, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid account id"})
+		return
+	}
+	balance, err := services.GetBalance(uint(accountID))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"account_id": accountID,
+		"balance":    balance,
+	})
+
+}
+func GetLedger(c *gin.Context) {
+	idParam := c.Param("id")
+
+	accountID, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "invalid account id"})
+		return
+	}
+
+	entries, err := services.GetLedger(uint(accountID))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"account_id": accountID,
+		"entries":    entries,
+	})
 }

@@ -3,8 +3,8 @@ package services
 import (
 	"errors"
 
-	"github.com/SssHhhAaaDddOoWww/miniBank/api/db"
-	"github.com/SssHhhAaaDddOoWww/miniBank/api/db/model"
+	"github.com/SssHhhAaaDddOoWww/miniBank/internal/db"
+	"github.com/SssHhhAaaDddOoWww/miniBank/internal/db/model"
 	"gorm.io/gorm"
 )
 
@@ -126,4 +126,28 @@ func Transfer(fromID, toID uint, amount float64) error {
 
 		return nil
 	})
+}
+
+func GetBalance(accountID uint) (float64, error) {
+	var acc model.Account
+
+	if err := db.DB.First(&acc, accountID).Error; err != nil {
+		return 0, err
+	}
+
+	return acc.Balance, nil
+}
+
+func GetLedger(accountID uint) ([]model.LedgerEntry, error) {
+	var entries []model.LedgerEntry
+	if err := db.DB.Where("account_id = ?", accountID).
+		Order("created_at desc").
+		Find(&entries).Error; err != nil {
+		return nil, err
+	}
+	if len(entries) == 0 {
+		return nil, errors.New("no ledger entries found")
+	}
+
+	return entries, nil
 }
