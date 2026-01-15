@@ -4,5 +4,5 @@ import "gorm.io/gorm"
 
 type Account struct {
 	gorm.Model
-	balance float64 `gorm:"not null; @default:0"`
+	Balance float64 `gorm:"not null; @default:0"`
 }
